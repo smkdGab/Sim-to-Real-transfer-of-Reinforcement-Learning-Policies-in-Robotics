@@ -38,24 +38,24 @@ Four variations of the vanilla Advantage Actor Critic algorithm, also slightly m
 TRPO and PPO were imported from the [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) package and tested on the Hopper environment. In particular, PPO is the algorithm chosen for the *Domain Randomization* implementation.
 
 ## Hyperparameters tuning
-
 Contents of Tuning folder:
-	- `gridsearch` for TRPO and PPO (\*) (\*\*)
-	- `gridsearch` for REINFORCE and A2C (\*) (\*\*)
-	- `utils` for REINFORCE and A2C (\*\*)
-	- `utils` for TRPO (`TRPO_train_test.py`)
-	- `utils` for PPO (`PPO_train_test.py`)
-	- `env` (source)
+- `gridsearch` for TRPO and PPO (\*) (\*\*)
+- `gridsearch` for REINFORCE and A2C (\*) (\*\*)
+- `utils` for REINFORCE and A2C (\*\*)
+- `utils` for TRPO (`TRPO_train_test.py`)
+- `utils` for PPO (`PPO_train_test.py`)
+- `env` (source)
 
 To do before running the code:
-	- open the interested file
-	- change imports (TRPO/PPO or REINFORCE/A2C)
-	- change hyperparameters to be tuned
-	- set `multiple_starts` (optional, default=4)
-	- set `log_path` (optional, default='outputs')
+- open the interested file
+- change imports (TRPO/PPO or REINFORCE/A2C)
+- change hyperparameters to be tuned
+- set `multiple_starts` (optional, default=4)
+- set `log_path` (optional, default='outputs')
 
 
 (\*):	these are the only files supposed to be runned
+
 (\*\*):	modify the imports first for being sure that the code is importing the correct algorithm
 
 
