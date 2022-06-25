@@ -16,7 +16,8 @@ def parse_args():
     parser.add_argument('--episodes', default=100_000, type=int)
     return parser.parse_args()
 args = parse_args()
-
+if args.train is None or args.source_log_path is None or args.target_log_path is None:
+    exit('Arguments required, run --help for more information')
 N_ENVS = os.cpu_count()
 MAX_EPS = args.episodes
 ENV_EPS = int(np.ceil(MAX_EPS / N_ENVS))

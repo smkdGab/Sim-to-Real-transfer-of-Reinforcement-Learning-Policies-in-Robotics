@@ -14,7 +14,6 @@ from tqdm import tqdm
 import time
 
 # Hyperparameters optimization import
-from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from sklearn.model_selection import ParameterGrid
 import pickle
 
@@ -23,7 +22,6 @@ import itertools
 
 # Save info
 history = []
-trials = None
 dump_counter = 0
 
 def parse_args():
@@ -32,7 +30,6 @@ def parse_args():
 	parser.add_argument('--env-test', default='CustomHopper-target-v0', type=str, help='Test environment')
 	parser.add_argument('--device', default='cpu', type=str, help='Device [cpu, cuda]')
 	parser.add_argument('--train-steps', default=1e6, type=int, help='Train timesteps for a single policy')
-	parser.add_argument('--max-evals', default=100, type=int, help='Number of Bayesian updates')
 	parser.add_argument('--verbose-ppo', default=0, type=int, help='Verbose parameter of PPO')
 	parser.add_argument('--verbose', default='False', type=bool, help='Print hyperparameters and mean return at each iteration')
 	parser.add_argument('--debug', default='False', type=str, help='Print model masses at each episode')
@@ -42,7 +39,6 @@ args = parse_args()
 args.debug = (args.debug == 'True')
 args.verbose = (args.verbose == 'True')
 
-max_evals = args.max_evals  # Max evaluation
 DEVICE = args.device
 VERBOSE = args.verbose  # print hyperparameters and mean return at each iteration
 VERBOSE_PPO = args.verbose_ppo
@@ -94,7 +90,6 @@ def train_and_test(params: dict) -> dict:
 		pprint(params)
 	
 	dumpv = {
-		'trials': trials,
 		'history': history
 	}
 	with open(f'opt_{dump_counter}.log', 'wb') as outf:
@@ -125,19 +120,17 @@ def train_and_test(params: dict) -> dict:
 	target_env.close()
 	history.append((params, - mean))  # negative because the method is made for minimizing
 	
-	return {'loss': -mean, 'status': STATUS_OK}
+	return {'loss': -mean, 'status': True}
 
 
 ################################# END IMPORT EVALUATOR #################################
 def main():
-	global trials
 	torso_s = 2.53429174
 	torso_t = 3.53429174
-	tr = torso_t / torso_s
+	tr = torso_s / torso_t
 	b0 = 3.92699082
 	b1 = 2.71433605
 	b2 = 5.08938010
-
 
 	default_params = {
 		'thigh_mean': b0,
@@ -147,11 +140,8 @@ def main():
 
 	space = {
 		'scale': [1, tr],
-		'hw': [0.5, 1, 2]
+		'hw': [0.5, 1, 1.5]
 	}
-
-	trials = Trials()   # Set database log
-	# fmin(train_and_test, space, algo=tpe.suggest, trials=trials, max_evals=max_evals)   # Set objective function
 
 	keys = list(space.keys())
 	for p in tqdm(itertools.product(*space.values())):
@@ -169,7 +159,6 @@ def main():
 	print(f"Best results: (the score is negated if the value has to be maximized): \n {best}")
 
 	dumpv = {
-		'trials': trials,
 		'history': history
 	}
 

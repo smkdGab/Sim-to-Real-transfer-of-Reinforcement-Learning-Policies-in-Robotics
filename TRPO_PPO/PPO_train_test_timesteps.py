@@ -17,7 +17,8 @@ def parse_args():
     parser.add_argument('--timesteps', type=int)
     return parser.parse_args()
 args = parse_args()
-
+if args.train is None or args.source_log_path is None or args.target_log_path is None:
+    exit('Arguments required, run --help for more information')
 N_ENVS = os.cpu_count()
 
 def main():
@@ -31,12 +32,14 @@ def main():
     if args.train == 'source':
         source_eval_callback = EvalCallback(eval_env=source_env, n_eval_episodes=50, eval_freq=15000, log_path=args.source_log_path) # if we are training in source, evaluate also in source
         callback_list.append(source_eval_callback)
-    
+        train_env = source_env
+    else:
+        train_env = target_env
     # model = PPO.load("model_"+args.train, env=target_env, device='cpu', print_system_info=True)
     model = PPO('MlpPolicy', n_steps=1024, batch_size=128, learning_rate=0.00025, env=train_env, verbose=1, device='cpu', tensorboard_log="./ppo_train_tensorboard/")
 
     callback = CallbackList(callback_list)
-    model.learn(total_timestep=args.timesteps, callback=callback, tb_log_name=args.train)
+    model.learn(total_timesteps=args.timesteps, callback=callback, tb_log_name=args.train)
     model.save(f"ppo_model_{args.train}_{args.timesteps}")
 
 

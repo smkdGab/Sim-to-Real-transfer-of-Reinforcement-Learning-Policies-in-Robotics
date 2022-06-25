@@ -1,5 +1,5 @@
 from env.custom_hopper import *
-from stable_baselines3 import PPO
+from sb3_contrib import TRPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor
 from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnMaxEpisodes, CallbackList, CheckpointCallback
@@ -17,7 +17,8 @@ def parse_args():
     parser.add_argument('--timesteps', type=int)
     return parser.parse_args()
 args = parse_args()
-
+if args.train is None or args.source_log_path is None or args.target_log_path is None:
+    exit('Arguments required, run --help for more information')
 N_ENVS = os.cpu_count()
 
 def main():
@@ -29,15 +30,18 @@ def main():
     callback_list = [checkpoint_callback, target_eval_callback]
 
     if args.train == 'source':
+        train_env = source_env
         source_eval_callback = EvalCallback(eval_env=source_env, n_eval_episodes=50, eval_freq=15000, log_path=args.source_log_path) # if we are training in source, evaluate also in source
         callback_list.append(source_eval_callback)
-    
+    else:
+        train_env = target_env
+
     # model = PPO.load("model_"+args.train, env=target_env, device='cpu', print_system_info=True)
-    model = PPO('MlpPolicy', n_steps=1024, batch_size=128, learning_rate=0.00025, env=train_env, verbose=1, device='cpu', tensorboard_log="./ppo_train_tensorboard/")
+    model = TRPO('MlpPolicy', batch_size=128, learning_rate=0.0003, env=train_env, verbose=1, device='cpu', tensorboard_log="./trpo_train_tensorboard/")
 
     callback = CallbackList(callback_list)
-    model.learn(total_timestep=args.timesteps, callback=callback, tb_log_name=args.train)
-    model.save(f"ppo_model_{args.train}_{args.timesteps}")
+    model.learn(total_timesteps=args.timesteps, callback=callback, tb_log_name=args.train)
+    model.save(f"trpo_model_{args.train}_{args.timesteps}")
 
 
 if __name__ == '__main__':
