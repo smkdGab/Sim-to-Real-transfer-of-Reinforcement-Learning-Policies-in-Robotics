@@ -9,6 +9,7 @@ The repository is intended as a support tool for the report of the project and i
 # Requirements
 - [Mujoco-py](https://github.com/openai/mujoco-py)
 - [stable-baselines3](https://github.com/DLR-RM/stable-baselines3)
+- [tensorboard](https://www.tensorflow.org/tensorboard/) [^fn5]
 
 # Environment
 The tests were performed using the [Hopper environment](https://www.gymlibrary.ml/environments/mujoco/hopper/) of Mujoco. The environment contains a flat world and a one-legged robot and the goal is to teach the leg how to move (jump) forward as fast as possible. In particular, two environments (*CustomHopper-source-v0* and *CustomHopper-target-v0*) were used to perform the *Sim-to-Sim* transfer. The two environments differ for the mass of the torso (`source=2.53429174; target=3.53429174`), while the other masses are unchanged. 
@@ -32,10 +33,30 @@ Four variations of the vanilla Advantage Actor Critic algorithm, also slightly m
 - whether the updates are batched or not (`A2C_batched` and `A2C_stepwise`).
 
 ### How to run the code
-[...]
+Running `train.py` inside each folder will start a training by *episodes* on the selected environment, with the possibility to:
+- select the number of training episodes;
+- select training environment;
+- select testing envinroment;
+- resume training from a previous model;
+- save the results.
+
+It is suggested to run the file with `--help` for the first time to list all the options.
+
 
 ## TRPO and PPO
 TRPO and PPO were imported from the [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) package and tested on the Hopper environment. In particular, PPO is the algorithm chosen for the *Domain Randomization* implementation.
+
+### How to run the code
+The `train_test.py` files will start a training session by *episodes* or by *timesteps* on the selected environment [^fn6]:
+- `--train source` will train the agent on the source environment, while logging intermediate tests on both the source and the target environments;
+- `--train target` will train the agent on the target environment, while logging intermediate tests on the target environment;
+- select the log folder with `--source-log-path` and `--target-log-path`. If `--train target` is selected, then the value of the source log path will be ignored;
+- the scripts support also tensorboard logging in the default directory `{algorithm}_train_tensorboard/`;
+- the default hyperparameters are the ones found with the tuning procedure (see next section)
+
+
+It is suggested to run the file with `--help` for the first time to list all the options.
+
 
 ## Hyperparameters tuning
 Contents of Tuning folder:
@@ -79,7 +100,9 @@ Automatic Domain Randomization was introduced by [OpenAI](https://openai.com/) a
 ## How to run the code
 [...]
 
-
-[^fn1]: "https://arxiv.org/abs/1910.07113"
+[^fn1]: https://arxiv.org/abs/1910.07113
 [^fn2]: https://mitpress.mit.edu/books/reinforcement-learning-second-edition
-[^fn3]: "https://medium.com/@fork.tree.ai/understanding-baseiline-techniques-for-reinforce-53a1e2279b57"
+[^fn3]: https://medium.com/@fork.tree.ai/understanding-baseiline-techniques-for-reinforce-53a1e2279b57
+[^fn4]: it is suggested to run the files with --help for the first time, since some of the scripts support this feature
+[^fn5]: tensorboard logging is used in some of the scripts concerning TRPO, PPO and therefore also UDR and ADR
+[^fn6]: the training is done by episodes only to compare the methods with REINFORCE and A2C, while generally the number of training timesteps is a more significant maeasure of the training time

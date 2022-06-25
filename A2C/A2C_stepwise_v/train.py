@@ -43,8 +43,6 @@ def parse_args():
                         help='number of training episodes between two tests (for plot)')
     parser.add_argument('--yd', default=50, type=int,
                         help='number of test episodes for a plot point')
-    parser.add_argument('--use-nn-baseline', default=False, type=bool,
-                        help='use neural network as baseline (may be ignored by some agents)')
     parser.add_argument('--use-entropy', default=False, type=bool,
                         help='use entropy regularization (may be ignored by some agents)')
     parser.add_argument('--workdir', default='results', type=str,
@@ -111,8 +109,7 @@ def main():
             print('resuming from episode', beginning_episode)
         policy.load_state_dict(torch.load(args.model), strict=True)
 
-    agent = Agent(policy, device=args.device,
-                  nn_baseline=args.use_nn_baseline, use_entropy=args.use_entropy)
+    agent = Agent(policy, device=args.device, use_entropy=args.use_entropy)
 
     print('Action space:', env.action_space)
     print('State space:', env.observation_space)
