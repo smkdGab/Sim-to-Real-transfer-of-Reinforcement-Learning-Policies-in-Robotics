@@ -139,7 +139,7 @@ def main():
 	}
 
 	space = {
-		'scale': [1, tr],
+		'scale': [1, tr, 1/tr],
 		'hw': [0.5, 1, 1.5]
 	}
 

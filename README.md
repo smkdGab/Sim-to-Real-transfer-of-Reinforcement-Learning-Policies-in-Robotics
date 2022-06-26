@@ -1,12 +1,6 @@
 # Sim to Real transfer of Reinforcement Learning Policies in Robotics
 ##### by Gabriele Spina, Marco Sorbi, Christian Montecchiani.
 
-The repository contains the code for the project *Sim to Real transfer of Reinforcement Learning Policies in Robotics* for the Machine Learning and Deep Learning 2021/2022 class.
-The repository is intended as a support tool for the report of the project and it contains toy examples of some well-known algorithms and methods in the fields of Reinforcement Learning and Sim-to-Real transfer.
-
-*Abstract*: [to be updated]
-
-
 - [Sim to Real transfer of Reinforcement Learning Policies in Robotics](#sim-to-real-transfer-of-reinforcement-learning-policies-in-robotics)
 				- [by Gabriele Spina, Marco Sorbi, Christian Montecchiani.](#by-gabriele-spina-marco-sorbi-christian-montecchiani)
 - [Requirements](#requirements)
@@ -24,6 +18,13 @@ The repository is intended as a support tool for the report of the project and i
 - [Automatic Domain Randomization](#automatic-domain-randomization)
 	- [How to run the code](#how-to-run-the-code-4)
 		- [Example of monitoring during training](#example-of-monitoring-during-training)
+
+The repository contains the code for the project *Sim to Real transfer of Reinforcement Learning Policies in Robotics* for the Machine Learning and Deep Learning 2021/2022 class.
+The repository is intended as a support tool for the report of the project and it contains examples of some well-known algorithms and methods in the fields of Reinforcement Learning and Sim-to-Real transfer. The implementation is not thought to be efficient, thus we suggest you to avoid using this repo for purposes other than educational.
+
+*Abstract*: [to be updated]
+
+
 
 # Requirements
 - [Mujoco-py](https://github.com/openai/mujoco-py)
@@ -71,7 +72,7 @@ The `train_test.py` files will start a training session by *episodes* or by *tim
 - `--train target` will train the agent on the target environment, while logging intermediate tests on the target environment;
 - select the log folder with `--source-log-path` and `--target-log-path`. If `--train target` is selected, then the value of the source log path will be ignored;
 - the scripts support also tensorboard logging in the default directory `{algorithm}_train_tensorboard/`;
-- the default hyperparameters are the ones found with the tuning procedure (see next section)
+- the default hyperparameters are the ones found with the tuning procedure (see next section).
 
 
 It is suggested to run the file with `--help` to list all the options.
@@ -79,12 +80,12 @@ It is suggested to run the file with `--help` to list all the options.
 
 ## Hyperparameters tuning
 Contents of Tuning folder:
-- `gridsearch` for TRPO and PPO (\*) (\*\*)
-- `gridsearch` for REINFORCE and A2C (\*) (\*\*)
-- `utils` for REINFORCE and A2C (\*\*)
-- `utils` for TRPO (`TRPO_train_test.py`)
-- `utils` for PPO (`PPO_train_test.py`)
-- `env` (source)
+- `gridsearch` for TRPO and PPO; $^1$ $^2$
+- `gridsearch` for REINFORCE and A2C; $^1$ $^2$
+- `utils` for REINFORCE and A2C; $^2$
+- `utils` for TRPO (`TRPO_train_test.py`);
+- `utils` for PPO (`PPO_train_test.py`);
+- `env` (source).
 
 To do before running the code:
 - open the interested file
@@ -94,9 +95,9 @@ To do before running the code:
 - set `log_path` (optional, default='outputs')
 
 
-(\*):	these are the only files supposed to be runned
+$^1$ : these are the only files supposed to be runned
 
-(\*\*):	modify the import statements at first for being sure that the code is importing the correct algorithm
+$^2$ : modify the import statements at first for being sure that the code is importing the correct algorithm
 
 
 # Uniform Domain Randomization
@@ -110,9 +111,9 @@ env.set_debug() # prints the current values for the masses
 
 ## How to run the code
 `UDR_env` contains the randomized source environment (*CustomHopper-source-randomized-v0*) for UDR. `UDR_train.py` is used to run the algorithm and train a new policy. It can be run using the following parameters:
-- `--env-train` training environment (default: *CustomHopper-source-randomized-v0*)
-- `--env-test` testing environment
-- `--eval-freq` for periodically evaluating the agent in the target environment and saving intermediate results
+- `--env-train` training environment (default: *CustomHopper-source-randomized-v0*);
+- `--env-test` testing environment;
+- `--eval-freq` for periodically evaluating the agent in the target environment and saving intermediate results.
 
 
  `UDR_gridsearch.py` was using for tuning the bounds of the parameters distributions. The script can be run with parameters similar to the train script. However it is required that the parameters to be tuned are modified manually. They are:
@@ -125,7 +126,7 @@ such that the distribution will be uniform in the interval $\left[\mu-hw, \mu+hw
 It is suggested to run both the files with `--help` to list all the options.
 
 # Automatic Domain Randomization
-Automatic Domain Randomization was introduced by [OpenAI](https://openai.com/) as an adversarial approach to the Domain Randomization techniques. Our implementation rely on the algorithms and the callbacks provided by [stable-baselines3](https://github.com/DLR-RM/stable-baselines3). For simplicity purposes the randomized environment of the UDR was not used in this context; instead we provided the `ADR` class and implemented a custom callback (`ADRCallback`) class to handle better the modification of the bounds. The two classes are thought to be complementary and they have to be used together:
+Automatic Domain Randomization was introduced by [OpenAI](https://openai.com/) as an adversarial approach to the Domain Randomization techniques. Our implementation relies on the algorithms and the callbacks provided by [stable-baselines3](https://github.com/DLR-RM/stable-baselines3). For simplicity purposes the randomized environment of the UDR was not used in this context; instead we provided the `ADR` class and implemented a custom callback (`ADRCallback`) class to handle better the modification of the bounds. The two classes are thought to be complementary and they have to be used together:
 - `ADR` class contains the hyperparameters of the method and the core methods for handling the buffers, evaluating the performances and updating the bounds;
 - `ADRCallback` class implements the `BaseCallback` of `stable-baselines3`. It is used to call the `ADR` methods at each episode and for debugging and logging purposes.
 
@@ -137,61 +138,67 @@ Our implementation of ADR uses PPO as default algorithm. `ADR_train.py` is used 
 - log paths and evaluation paths for logging and saving intermediate results and target evaluations (*tensorboard* supported)
 - `--model` for resuming training of a previous model
 
-It is suggested to run the file with `--help` to list all the options.
+The file `plot_bounds.py` is used to plot the evolution of bounds through time. The bounds should be logged in the `logs/train.npz` file in the same folder. It is possible to plot with respect to episodes or timesteps.
+
+A pre-trained model is available in the `models` folder and a simulation can be run with the `ADR_test.py` script.
+
+It is suggested to run the files with `--help` to list all the options.
 
 
 ### Example of monitoring during training
 ```
-NUM_TIMESTEPS: 92733440
-N_EPISODES: 245932
+NUM_TIMESTEPS: 16072704
+N_EPISODES: 44025
 
-	[2.77]«---------------------------------------------------------[3.93]-------------»[4.2]
-	[2.15]«----------------------------[2.71]-----------------------------------------------------»[3.79]
-	[4.23]«------------------------------------------[5.09]---------------------------------------»[5.89]
+	[3.61]«---------------[3.93]----»[4.01]
+	[2.53]«---------[2.71]---------»[2.9]
+	[4.9]«---------[5.09]-----»[5.2]
 
 DATA BUFFER SIZE:
-{'foot_high': 0,
+{'foot_high': 2,
  'foot_low': 0,
- 'thigh_high': 41,
+ 'thigh_high': 0,
  'thigh_low': 0,
  'leg_high': 0,
  'leg_low': 0}
 
 LAST PERFORMANCES:
-[]
+[('foot_low', 1573.02703328)]
 
 LAST UPDATES:
-[]
+[('foot_low', 'low+', 0.01679891697261309)]
 
 LOW_TH = 1000
 HIGH_TH = 1500
 
------------------------------------------
-| ep_length               | 361         |
-| ep_return               | 1.6e+03     |
-| n_episodes              | 245932      |
-| num_timesteps           | 63356048    |
-| rollout/                |             |
-|    ep_len_mean          | 366         |
-|    ep_rew_mean          | 1.55e+03    |
-| time/                   |             |
-|    fps                  | 1041        |
-|    iterations           | 7734        |
-|    time_elapsed         | 60826       |
-|    total_timesteps      | 63356928    |
-| train/                  |             |
-|    approx_kl            | 0.027286546 |
-|    clip_fraction        | 0.255       |
-|    clip_range           | 0.2         |
-|    entropy_loss         | 1.69        |
-|    explained_variance   | 0.921       |
-|    learning_rate        | 0.00025     |
-|    loss                 | 109         |
-|    n_updates            | 113180      |
-|    policy_gradient_loss | -0.00477    |
-|    std                  | 0.14        |
-|    value_loss           | 493         |
------------------------------------------
+----------------------------------------
+| ep_length               | 315        |
+| ep_return               | 1.37e+03   |
+| n_episodes              | 44025      |
+| num_timesteps           | 16072452   |
+| rollout/                |            |
+|    ep_len_mean          | 363        |
+|    ep_rew_mean          | 1.5e+03    |
+| time/                   |            |
+|    fps                  | 1841       |
+|    iterations           | 1308       |
+|    time_elapsed         | 8728       |
+|    total_timesteps      | 16072704   |
+| train/                  |            |
+|    approx_kl            | 0.03323253 |
+|    clip_fraction        | 0.32       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 1.86       |
+|    explained_variance   | 0.992      |
+|    learning_rate        | 0.00025    |
+|    loss                 | 9.44       |
+|    n_updates            | 13070      |
+|    policy_gradient_loss | 0.00747    |
+|    std                  | 0.132      |
+|    value_loss           | 26.1       |
+----------------------------------------
+
+
 ```
 
 [^fn1]: https://arxiv.org/abs/1910.07113
