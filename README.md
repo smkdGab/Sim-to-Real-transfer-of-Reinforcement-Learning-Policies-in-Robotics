@@ -19,7 +19,7 @@
 	- [How to run the code](#how-to-run-the-code-4)
 		- [Example of monitoring during training](#example-of-monitoring-during-training)
 
-The repository contains the code for the project *Sim to Real transfer of Reinforcement Learning Policies in Robotics* for the Machine Learning and Deep Learning 2021/2022 class.
+The repository contains the code for the project *Sim to Real transfer of Reinforcement Learning Policies in Robotics* for the *Machine Learning and Deep Learning* 2021/2022 class.
 The repository is intended as a support tool for the report of the project and it contains examples of some well-known algorithms and methods in the fields of Reinforcement Learning and Sim-to-Real transfer. The implementation is not thought to be efficient, thus we suggest you to avoid using this repo for purposes other than educational.
 
 *Abstract*: [to be updated]
@@ -32,11 +32,11 @@ The repository is intended as a support tool for the report of the project and i
 - [tensorboard](https://www.tensorflow.org/tensorboard/) [^fn5]
 
 # Environment
-The tests were performed using the [Hopper environment](https://www.gymlibrary.ml/environments/mujoco/hopper/) of Mujoco. The environment contains a flat world and a one-legged robot and the goal is to teach the leg how to move (jump) forward as fast as possible. In particular, two environments (*CustomHopper-source-v0* and *CustomHopper-target-v0*) were used to perform the *Sim-to-Sim* transfer. The two environments differ for the mass of the torso (`source=2.53429174; target=3.53429174`), while the other masses are unchanged. 
+The tests were performed using the [Hopper environment](https://www.gymlibrary.ml/environments/mujoco/hopper/) of Mujoco. The environment contains a flat world with a one-legged robot and the goal is to teach the leg how to move (jump) forward as fast as possible. In particular, two environments (*CustomHopper-source-v0* and *CustomHopper-target-v0*) were used to perform the *Sim-to-Sim* transfer. The two environments differ for the mass of the torso (`source=2.53429174; target=3.53429174`), while the other masses are unchanged. 
 
 
 # Algorithms
-The repository contains different implementations of some well-known algorithms in the field of Reinforcement Learning, and an implementation of the *Automatic Domain Randomization* algorithm of [OpenAI](https://openai.com/) introduced in [^fn1].
+The repository contains different implementations of RL algorithms, an implementation of *Uniform Domain Randomization* and one of *Automatic Domain Randomization* algorithm of [OpenAI](https://openai.com/) introduced in [^fn1].
 
 ## REINFORCE
 Three variations of the REINFORCE algorithm, following a slightly modified version of the one proposed by [^fn2]. The implementations differ for the usage of the *baseline* term:
