@@ -45,7 +45,11 @@ Three variations of the REINFORCE algorithm, following a slightly modified versi
 3. state-value function baseline.
 
 ### How to run the code
-[...]
+Running `train.py` inside each folder will start a training by *episodes* on the selected environment, with the possibility to:
+- select the number of training episodes;
+- resume training from a previous model.
+
+It is suggested to run the file with `--help` to list all the options.
 
 ## A2C
 Four variations of the vanilla Advantage Actor Critic algorithm, also slightly modified starting from [^fn2]. The implementations differ for:

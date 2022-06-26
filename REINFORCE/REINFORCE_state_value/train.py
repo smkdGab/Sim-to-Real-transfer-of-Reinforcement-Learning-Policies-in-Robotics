@@ -13,12 +13,9 @@ import re
 import os
 import random
 import string
-import sys
-
-sys.path.insert(0, "/home/christian/Desktop/University/DeepLearning/sim2real_rl_robotics_mldl_22-main/") 
 
 from env.custom_hopper import *
-from REINFORCE_agent import AgentREINFORCE, PolicyREINFORCE
+from agent import Policy, Agent
 
 interrupted = False
 
@@ -29,19 +26,18 @@ def sigint_handler(signal, frame):
 def parse_args():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--n-episodes', default=20000, type=int, help='Number of training episodes')
-	parser.add_argument('--print-every', default=100, type=int, help='Print info every <> episodes')
-	parser.add_argument('--device', default='cuda', type=str, help='network device [cpu, cuda]')
+	parser.add_argument('--print-every', default=1000, type=int, help='Print info every <> episodes')
+	parser.add_argument('--device', default='cpu', type=str, help='network device [cpu, cuda]')
 	parser.add_argument('--model', default=None, type=str, help='pretrained model from which resume training')
 	parser.add_argument('--train-env', default='source', type=str, help='training environment in (source, target)')
 	parser.add_argument('--test-env', default='source', type=str, help='testing environment in (source, target)')
 	parser.add_argument('--xd', default=250, type=int, help='number of training episodes between two tests (for plot)')
 	parser.add_argument('--yd', default=50, type=int, help='number of test episodes for a plot point')
-	parser.add_argument('--use-nn-baseline', default=False, type=bool, help='use neural network as baseline (may be ignored by some agents)')
-	parser.add_argument('--use-entropy', default=True, type=bool, help='use entropy regularization (may be ignored by some agents)')
+	parser.add_argument('--use-nn-baseline', default=True, type=bool, help='use neural network as baseline  [if False use whitening baseline]')
 	return parser.parse_args()
 
 
-def test(agent:AgentREINFORCE, test_env:str, episodes:int):
+def test(agent:Agent, test_env:str, episodes:int):
 
 	env = gym.make(test_env)
 
@@ -72,6 +68,7 @@ def test(agent:AgentREINFORCE, test_env:str, episodes:int):
 
 def main():
 	args = parse_args()
+	args.use_nn_baseline = (args.use_nn_baseline == 'True')
 
 	assert all(x in ('source','target') for x in [args.train_env, args.test_env])
 	train_env, test_env = tuple(f'CustomHopper-{x}-v0' for x in [args.train_env, args.test_env])
@@ -83,7 +80,7 @@ def main():
 	observation_space_dim = env.observation_space.shape[-1]
 	action_space_dim = env.action_space.shape[-1]
 
-	policy = PolicyREINFORCE(observation_space_dim, action_space_dim)
+	policy = Policy(observation_space_dim, action_space_dim)
 	if args.model is None:
 		while True:
 			workdir = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
@@ -115,7 +112,7 @@ def main():
 			print('resuming from episode', beginning_episode)
 		policy.load_state_dict(torch.load(args.model), strict=True)
 	
-	agent = AgentREINFORCE(policy, device=args.device,)
+	agent = Agent(policy, device=args.device, nn_baseline= args.use_nn_baseline)
 	
 	print('Action space:', env.action_space)
 	print('State space:', env.observation_space)
@@ -138,7 +135,7 @@ def main():
 
 			state, reward, done, info = env.step(action.detach().cpu().numpy())
 
-			agent.store_outcome(action_probabilities, reward, done)
+			agent.store_outcome(previous_state, state, action_probabilities, reward, done)
 
 			train_reward += reward
 		
