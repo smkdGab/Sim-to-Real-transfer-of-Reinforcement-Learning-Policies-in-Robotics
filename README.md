@@ -33,7 +33,9 @@ Nowadays, one of the main problems of the Reinforcement Learning paradigm is its
 - [tensorboard](https://www.tensorflow.org/tensorboard/) [^fn5]
 
 # Environment
-The tests were performed using the [Hopper environment](https://www.gymlibrary.ml/environments/mujoco/hopper/) of Mujoco. The environment contains a flat world with a one-legged robot and the goal is to teach the leg how to move (jump) forward as fast as possible. In particular, two environments (*CustomHopper-source-v0* and *CustomHopper-target-v0*) were used to perform the *Sim-to-Sim* transfer. The two environments differ for the mass of the torso (`source=2.53429174; target=3.53429174`), while the other masses are unchanged. 
+The tests were performed using the [Hopper environment](https://www.gymlibrary.ml/environments/mujoco/hopper/) of Mujoco. The environment contains a flat world with a one-legged robot and the goal is to teach the leg how to move (jump) forward as fast as possible. In particular, two environments (*CustomHopper-source-v0* and *CustomHopper-target-v0*) were used to perform the *Sim-to-Sim* transfer. The two environments differ for the mass of the torso (`source=2.53429174; target=3.53429174`), while the other masses are unchanged.
+
+![image](images/env_img.png)
 
 
 # Algorithms
@@ -202,9 +204,9 @@ HIGH_TH = 1500
 |    std                  | 0.132      |
 |    value_loss           | 26.1       |
 ----------------------------------------
-
-
 ```
+
+![image](ADR/bounds_constant_example.png)
 
 [^fn1]: https://arxiv.org/abs/1910.07113
 [^fn2]: https://mitpress.mit.edu/books/reinforcement-learning-second-edition
