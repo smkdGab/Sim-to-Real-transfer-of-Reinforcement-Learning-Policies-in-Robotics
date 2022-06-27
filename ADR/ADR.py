@@ -21,7 +21,7 @@ class AutomaticDomainRandomization():
 		self.bounds = self._init_bounds() # bounds is a dict {'torso_low':val, 'torso_high':val, ...}
 		self.p_b = p_b  # prob of using algo1 or algo2
 		self.step = getattr(self, '_' + step)
-		self.hinge_mass = None
+		self.thigh_mass = None
 		self.leg_mass = None
 		self.foot_mass = None
 		self.rewards = []
@@ -29,10 +29,10 @@ class AutomaticDomainRandomization():
 		self.current_weight = np.float64(1)
 		self.last_performances = []
 		self.last_increments = []
-		self.part = ['hinge', 'leg', 'foot']
+		self.part = ['thigh', 'leg', 'foot']
 		self.databuffer = {
-			"hinge_low": [],
-			"hinge_high": [],
+			"thigh_low": [],
+			"thigh_high": [],
 			"leg_low": [],
 			"leg_high": [],
 			"foot_low": [],
@@ -56,11 +56,11 @@ class AutomaticDomainRandomization():
 	CORE
 	"""
 	def eval_entropy(self) -> float:
-		range_hinge = self.bounds["hinge_high"] - self.bounds["hinge_low"]
+		range_thigh = self.bounds["thigh_high"] - self.bounds["thigh_low"]
 		range_leg = self.bounds["leg_high"] - self.bounds["leg_low"]
 		range_foot = self.bounds["foot_high"] - self.bounds["foot_low"]
 
-		entropy = np.log([range_hinge, range_leg, range_foot]).mean()
+		entropy = np.log([range_thigh, range_leg, range_foot]).mean()
 
 		return entropy
 
@@ -104,14 +104,14 @@ class AutomaticDomainRandomization():
 
 	def get_random_masses(self):
 		# Set three random masses
-		hinge_mass = np.random.uniform(
-			self.bounds["hinge_low"], self.bounds["hinge_high"])
+		thigh_mass = np.random.uniform(
+			self.bounds["thigh_low"], self.bounds["thigh_high"])
 		leg_mass = np.random.uniform(
 			self.bounds["leg_low"], self.bounds["leg_high"])
 		foot_mass = np.random.uniform(
 			self.bounds["foot_low"], self.bounds["foot_high"])
 
-		d = {"hinge": hinge_mass, "leg": leg_mass, "foot": foot_mass}
+		d = {"thigh": thigh_mass, "leg": leg_mass, "foot": foot_mass}
 
 		# prob of set masses to lower or upper bound
 		u = np.random.uniform(0, 1)
@@ -225,8 +225,8 @@ class AutomaticDomainRandomization():
 
 	def _init_bounds(self):
 		try:
-			dict = {"hinge_low": self.init_params['hinge'],
-					"hinge_high": self.init_params['hinge'],
+			dict = {"thigh_low": self.init_params['thigh'],
+					"thigh_high": self.init_params['thigh'],
 					"leg_low": self.init_params['leg'],
 					"leg_high": self.init_params['leg'],
 					"foot_low": self.init_params['foot'],

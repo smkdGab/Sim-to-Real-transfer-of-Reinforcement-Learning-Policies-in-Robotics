@@ -65,7 +65,7 @@ def main():
 		adr_callback.reload(beginning_timestep, verbose=args.callback_verbose, log_path_tb=args.log_path_tb, log_path=args.log_path, save_freq=args.save_freq, save_path=args.save_path)
 		ppo_train_timesteps -= beginning_timestep
 	else:
-		init_params = {"hinge": 3.92699082,  "leg": 2.71433605, "foot": 5.0893801}
+		init_params = {"thigh": 3.92699082,  "leg": 2.71433605, "foot": 5.0893801}
 
 		handlerADR = AutomaticDomainRandomization(init_params, p_b=args.pb, m=args.m, step=args.step, delta=args.delta, thresholds=[args.low_th, args.high_th])
 		
