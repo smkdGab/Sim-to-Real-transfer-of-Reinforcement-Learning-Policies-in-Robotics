@@ -147,7 +147,7 @@ Our implementation of ADR uses PPO as default algorithm. `ADR_train.py` is used 
 
 The file `plot_bounds.py` is used to plot the evolution of bounds through time. The bounds should be logged in the `logs/train.npz` file in the same folder. It is possible to plot with respect to episodes or timesteps.
 
-The best model ever found duringt training is available in the `models/best_eval` folder and a simulation can be run with the `ADR_test.py` script.
+The best model ever found during the training is available in the `models/best_eval` folder and a simulation can be run with the `ADR_test.py` script.
 
 It is suggested to run the files with `--help` to list all the options.
 
