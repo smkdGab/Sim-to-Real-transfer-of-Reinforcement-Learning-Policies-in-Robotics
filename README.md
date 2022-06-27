@@ -3,6 +3,7 @@
 
 - [Sim to Real transfer of Reinforcement Learning Policies in Robotics](#sim-to-real-transfer-of-reinforcement-learning-policies-in-robotics)
 				- [by Gabriele Spina, Marco Sorbi, Christian Montecchiani.](#by-gabriele-spina-marco-sorbi-christian-montecchiani)
+	- [Report Abstract](#report-abstract)
 - [Requirements](#requirements)
 - [Environment](#environment)
 - [Algorithms](#algorithms)
@@ -22,8 +23,8 @@
 The repository contains the code for the project *Sim to Real transfer of Reinforcement Learning Policies in Robotics* for the *Machine Learning and Deep Learning* 2021/2022 class.
 The repository is intended as a support tool for the report of the project and it contains examples of some well-known algorithms and methods in the fields of Reinforcement Learning and Sim-to-Real transfer. The implementation is not thought to be efficient, thus we suggest you to avoid using this repo for purposes other than educational.
 
-*Abstract*: [to be updated]
-
+## Report Abstract
+Nowadays, one of the main problems of the Reinforcement Learning paradigm is its challenging application to robotics, due to the difficulties of learning in the real world and modeling physics into simulations. In this report, we explore one of the more advanced methods of Domain Randomization, Automatic DR, to find out how it deals with former methods' issues and show its strengths and weaknesses.
 
 
 # Requirements
@@ -144,7 +145,7 @@ Our implementation of ADR uses PPO as default algorithm. `ADR_train.py` is used 
 
 The file `plot_bounds.py` is used to plot the evolution of bounds through time. The bounds should be logged in the `logs/train.npz` file in the same folder. It is possible to plot with respect to episodes or timesteps.
 
-A pre-trained model is available in the `models` folder and a simulation can be run with the `ADR_test.py` script.
+The best model ever found duringt training is available in the `models/best_eval` folder and a simulation can be run with the `ADR_test.py` script.
 
 It is suggested to run the files with `--help` to list all the options.
 
